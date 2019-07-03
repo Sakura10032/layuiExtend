@@ -114,6 +114,7 @@
         <div class="inp"><input type="checkbox" autocomplete="off" name="opera" lay-filter="test" title="checkStrictly" lay-skin="primary"> </div>
         <div class="inp"><input type="checkbox" autocomplete="off" name="opera" lay-filter="test" title="accordion" lay-skin="primary"> </div>
         <div class="inp"><input type="checkbox" autocomplete="off" name="opera" lay-filter="test" title="draggable" lay-skin="primary"> </div>
+        <div class="inp"><input type="checkbox" autocomplete="off" name="opera" lay-filter="test" title="showLine" lay-skin="primary"> </div>
 
         <div class="inp">
             <h3>contextmenuList</h3>
@@ -152,6 +153,7 @@
             <option value="insertBefore">添加到节点之前</option>
             <option value="insertAfter">添加到节点之后</option>
             <option value="reload">重新加载树</option>
+            <option value="getAllNodeData">获取所有节点数据</option>
         </select>  
         <div class="updateKeyChildren met">
 <pre class="layui-code code ">
@@ -179,7 +181,7 @@ console.log(el2.getChecked(true,false));
         </div>
         <div class="setChecked met">
 <pre class="layui-code code">
-el2.setChecked([12])
+el2.setChecked([12],true)
 </pre>
         </div>
         <div class="unCheckNodes met">
@@ -240,6 +242,14 @@ el2.insertAfter(1,{
  el2=el2.reload({data: data});
 </pre>
         </div>
+        <div class="getAllNodeData met">
+<pre class="layui-code code">
+getAllNodeData: function() {
+    console.log(el2.getAllNodeData())
+}
+</pre>
+        </div>
+        
     </div>
     
     <fieldset class="layui-elem-field layui-field-title site-title">
@@ -569,7 +579,7 @@ var el6=eleTree.render({
                     console.log(el2.getChecked(true,false));
                 },
                 setChecked: function() {
-                    el2.setChecked([12]);
+                    el2.setChecked([12],true);
                 },
                 unCheckNodes: function() {
                     el2.unCheckNodes();
@@ -610,6 +620,9 @@ var el6=eleTree.render({
                 },
                 reload: function() {
                     el2=el2.reload({data: data});
+                },
+                getAllNodeData: function() {
+                    console.log(el2.getAllNodeData())
                 }
             }
             
@@ -621,6 +634,7 @@ var el6=eleTree.render({
                 showCheckbox: true,
                 defaultExpandAll: true,
                 draggable: true,
+                showLine: true,
                 contextmenuList: ["copy","add.async","edit","remove",{eventName: "test", text: "测试"}]
             });
             eleTree.on("nodeClick(data3)",function(d) {
@@ -658,55 +672,56 @@ var el6=eleTree.render({
             })
 
             eleTree.on("nodeAppend(data3)",function(d) {
-                console.group("添加子节点nodeAppend:")
-                console.log(d.data);    // 点击节点对于的数据
-                console.log(d.node);    // 点击的dom节点
-                console.log(this);      // 与d.node相同
-                // d.stop();            // 取消添加
-                // d.setData({          // 自定义数据
-                //     id: 666,
-                //     label: "aaa"
-                // })
+                // 异步操作
                 setTimeout(function() {
-                    // 异步添加节点
-                    d.setData()
-                },300)
-                console.log(d.newData); // 新增加的节点数据
-                console.groupEnd();      
+                    console.group("添加子节点nodeAppend:")
+                    console.log(d.data);    // 点击节点对于的数据
+                    console.log(d.node);    // 点击的dom节点
+                    console.log(this);      // 与d.node相同
+                    // d.stop();            // 取消添加
+                    // d.setData({          // 自定义数据
+                    //     id: 666,
+                    //     label: "aaa"
+                    // })
+                    d.setData();    // 异步必须调用
+                    // d.stop();
+                    console.log(d.newData); // 新增加的节点数据
+                    console.groupEnd();  
+                },300)    
             })
             eleTree.on("nodeInsertBefore(data3)",function(d) {
-                console.group("添加节点之前nodeInsertBefore:")
-                console.log(d.data);    // 点击节点对于的数据
-                console.log(d.node);    // 点击的dom节点
-                console.log(this);      // 与d.node相同
-                // d.stop();            // 取消添加
-                // d.setData({          // 自定义数据
-                //     key: 666,
-                //     label: "aaa"
-                // })
+                // 异步操作
                 setTimeout(function() {
-                    // 异步添加节点
+                    console.group("添加节点之前nodeInsertBefore:")
+                    console.log(d.data);    // 点击节点对于的数据
+                    console.log(d.node);    // 点击的dom节点
+                    console.log(this);      // 与d.node相同
+                    // d.stop();            // 取消添加
+                    // d.setData({          // 自定义数据
+                    //     key: 666,
+                    //     label: "aaa"
+                    // })
                     d.setData()
-                },300)
-                console.log(d.newData); // 新增加的节点数据
-                console.groupEnd();      
+                    console.log(d.newData); // 新增加的节点数据
+                    console.groupEnd();    
+                },300)  
             })
             eleTree.on("nodeInsertAfter(data3)",function(d) {
-                console.group("添加节点之后nodeInsertAfter:")
-                console.log(d.data);    // 点击节点对于的数据
-                console.log(d.node);    // 点击的dom节点
-                console.log(this);      // 与d.node相同
-                // d.stop();            // 取消添加
-                // d.setData({          // 自定义数据
-                //     key: 666,
-                //     label: "aaa"
-                // })
+                // 异步操作
                 setTimeout(function() {
-                    // 异步添加节点
+                    console.group("添加节点之后nodeInsertAfter:")
+                    console.log(d.data);    // 点击节点对于的数据
+                    console.log(d.node);    // 点击的dom节点
+                    console.log(this);      // 与d.node相同
+                    // d.stop();            // 取消添加
+                    // d.setData({          // 自定义数据
+                    //     key: 666,
+                    //     label: "aaa"
+                    // })
                     d.setData()
-                },300)
-                console.log(d.newData); // 新增加的节点数据
-                console.groupEnd();      
+                    console.log(d.newData); // 新增加的节点数据
+                    console.groupEnd();   
+                },300)   
             })
             eleTree.on("nodeEdit(data3)",function(d) {
                 console.group("编辑节点nodeEdit:")
